@@ -1,0 +1,17 @@
+
+[Unit]
+Description=Tendril VCS Monitoring Server
+
+[Service]
+ExecStart=/usr/bin/twistd --nodaemon --pidfile= vcs_monitor.tac
+
+WorkingDirectory=/home/tendril/tools/vcs_monitor/deploy
+
+User=tendril
+Group=tendril
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
