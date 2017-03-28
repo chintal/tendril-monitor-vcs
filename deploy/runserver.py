@@ -11,8 +11,12 @@ Simple Deployment Example
 
 """
 
+from vcs_monitor import worker
+from twisted.internet import reactor
+
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 if __name__ == '__main__':
-    pass
+    worker.start()
+    reactor.run()

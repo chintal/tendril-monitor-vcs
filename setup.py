@@ -12,7 +12,10 @@ with open('README.rst') as readme_file:
     readme = readme_file.read()
 
 requirements = [
+    'pika',
     'twisted',
+    'checkoutmanager',  # The 'collectors' branch of chintal's fork
+    # 'tendril',  # Install this manually
 ]
 
 test_requirements = [
