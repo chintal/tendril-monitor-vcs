@@ -19,6 +19,7 @@ from twisted.python import log
 from checkoutmanager.runner import run_one
 from tendril.entityhub import projects
 from tendril.dox import gedaproject
+
 from tendril.utils.config import MQ_SERVER
 from tendril.utils.config import MQ_SERVER_PORT
 from tendril.utils.config import SVN_SERVER_ROOT
@@ -51,7 +52,9 @@ def process(queue_object, connection):
         wcpath = get_wcpath(commit_info['repo'])
         vcs_update(wcpath)
         dox_regen(wcpath)
-        disseminate(body, connection)
+        commit_info['repo'] = os.path.relpath(commit_info['repo'],
+                                              SVN_SERVER_ROOT)
+        disseminate(json.dumps(commit_info), connection)
     yield ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
@@ -61,23 +64,23 @@ def get_wcpath(repopath):
 
 
 def vcs_update(wcpath):
-    # result = run_one('up', directory=wcpath, std_output=False)
-    print "VCS update for ", wcpath
+    log.msg("VCS update for ", wcpath)
+    result = run_one('up', directory=wcpath, std_output=False)
 
 
 def dox_regen(wcpath):
-    # rval = projects.get_projects(wcpath)
-    # lprojects = rval[0]
-    # for project in lprojects:
-    #     print " -- Regenerate dox for ", lprojects[project]
-    #     gedaproject.generate_docs(lprojects[project])
-    print "Regenerate dox for ", wcpath
+    log.msg("Regenerate dox for ", wcpath)
+    rval = projects.get_projects(wcpath)
+    lprojects = rval[0]
+    for project in lprojects:
+        print " -- Regenerate dox for ", lprojects[project]
+        gedaproject.generate_docs(lprojects[project])
 
 
 @defer.inlineCallbacks
 def disseminate(commit_info, connection):
-    print "Dissemnating commit info : "
-    print commit_info
+    log.msg("Dissemnating commit info : ")
+    log.msg(commit_info)
     channel = yield connection.channel()
     yield channel.exchange_declare(exchange='published_vcs_commits',
                                    type='fanout')
