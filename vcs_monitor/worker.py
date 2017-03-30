@@ -65,6 +65,7 @@ def get_wcpath(repopath):
 
 def vcs_update(wcpath):
     log.msg("VCS update for ", wcpath)
+    # TODO Figure out repo validity
     result = run_one('up', directory=wcpath, std_output=False)
 
 

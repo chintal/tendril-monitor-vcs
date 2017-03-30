@@ -32,7 +32,7 @@ setup(
     author_email='shashank@chintal.in',
     url='https://github.com/chintal/tendril-monitor-vcs',
     packages=[
-        'vcsmonitor_server',
+        'vcs_monitor',
     ],
     package_dir={'vcs_monitor': 'vcs_monitor'},
     include_package_data=True,

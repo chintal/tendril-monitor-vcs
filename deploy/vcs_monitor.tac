@@ -34,6 +34,5 @@ application.setComponent(ILogObserver, FileLogObserver(logfile).emit)
 
 
 # attach the service to its parent application
-from vcs_monitor.worker import get_service
-service = get_service()
-service.setServiceParent(application)
+from vcs_monitor import worker
+worker.start()
