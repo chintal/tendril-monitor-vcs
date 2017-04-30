@@ -71,11 +71,15 @@ def vcs_update(wcpath):
 
 def dox_regen(wcpath):
     log.msg("Regenerate dox for ", wcpath)
-    rval = projects.get_projects(wcpath)
-    lprojects = rval[0]
-    for project in lprojects:
-        print " -- Regenerate dox for ", lprojects[project]
-        gedaproject.generate_docs(lprojects[project])
+    targets = []
+    if projects.is_project_folder(wcpath):
+        targets.append(wcpath)
+    lprojects, lpcbs, lcards, lcard_reporoot = \
+        projects.get_projects(wcpath)
+    targets.extend([lprojects[x] for x in lprojects.keys()])
+    for target in targets:
+        log.msg(" -- Regenerate dox for ", target)
+        gedaproject.generate_docs(target)
 
 
 @defer.inlineCallbacks
